@@ -3,229 +3,360 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>站前路学校 · 八年级1班指挥系统</title>
+    <title>八年级1班 · 核心档案</title>
     <style>
-        /* 1. 全局设置：深空黑背景 */
+        /* 1. 基础设置：极简白灰 */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
         body {
-            font-family: "Microsoft YaHei", "Segoe UI", sans-serif;
-            background-color: #050505;
-            color: #e0e0e0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); /* 高级灰白渐变 */
+            color: #333;
             height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             overflow: hidden;
-            background-image: 
-                linear-gradient(rgba(0, 255, 255, 0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0, 255, 255, 0.03) 1px, transparent 1px);
-            background-size: 30px 30px; /* 网格背景 */
         }
 
-        /* 2. 主容器：全息终端 */
-        .terminal-container {
-            width: 95%;
-            max-width: 1000px;
-            height: 700px;
-            background: rgba(10, 15, 20, 0.9);
-            border: 1px solid #00d2ff;
-            border-radius: 10px;
-            box-shadow: 0 0 30px rgba(0, 210, 255, 0.2);
-            display: flex;
-            overflow: hidden;
-            position: relative;
-            backdrop-filter: blur(10px);
-        }
-
-        /* 装饰角标 */
-        .corner {
+        /* 2. 液态背景球（营造氛围） */
+        .liquid-bg {
             position: absolute;
-            width: 20px;
-            height: 20px;
-            border: 2px solid #00d2ff;
-            z-index: 10;
+            width: 600px;
+            height: 600px;
+            background: linear-gradient(45deg, #ffffff, #e0e0e0);
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.6;
+            animation: float 10s infinite ease-in-out;
+            z-index: -1;
         }
-        .top-left { top: -2px; left: -2px; border-right: none; border-bottom: none; }
-        .top-right { top: -2px; right: -2px; border-left: none; border-bottom: none; }
-        .bottom-left { bottom: -2px; left: -2px; border-right: none; border-top: none; }
-        .bottom-right { bottom: -2px; right: -2px; border-left: none; border-top: none; }
+        .liquid-bg:nth-child(2) {
+            top: -100px;
+            right: -100px;
+            animation-delay: -5s;
+        }
 
-        /* 3. 左侧导航栏 */
-        .sidebar {
-            width: 220px;
-            background: rgba(0, 20, 30, 0.8);
-            border-right: 1px solid #00d2ff;
-            padding: 30px 0;
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(30px, -50px); }
+        }
+
+        /* 3. 主容器：液态玻璃卡片 */
+        .glass-container {
+            width: 90%;
+            max-width: 1000px;
+            height: 750px;
+            background: rgba(255, 255, 255, 0.65); /* 半透明白 */
+            backdrop-filter: blur(20px); /* 核心：毛玻璃模糊 */
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 
+                0 20px 50px rgba(0, 0, 0, 0.05), /* 柔和阴影 */
+                inset 0 0 0 1px rgba(255, 255, 255, 0.6); /* 内发光 */
             display: flex;
             flex-direction: column;
-            gap: 15px;
-        }
-
-        .nav-btn {
-            background: transparent;
-            border: none;
-            color: #8899a6;
-            padding: 15px 25px;
-            text-align: left;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: bold;
-            transition: all 0.3s;
-            border-left: 3px solid transparent;
-            font-family: "Microsoft YaHei", sans-serif;
-        }
-
-        .nav-btn:hover {
-            background: rgba(0, 210, 255, 0.1);
-            color: #fff;
-            padding-left: 30px;
-        }
-
-        .nav-btn.active {
-            background: rgba(0, 210, 255, 0.2);
-            color: #00d2ff;
-            border-left: 3px solid #00d2ff;
-            text-shadow: 0 0 10px #00d2ff;
-        }
-
-        /* 4. 右侧内容显示区 */
-        .main-display {
-            flex: 1;
-            padding: 40px;
+            overflow: hidden;
             position: relative;
+        }
+
+        /* 4. 顶部导航栏 */
+        .navbar {
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .brand {
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            color: #222;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-item {
+            cursor: pointer;
+            font-size: 15px;
+            color: #666;
+            font-weight: 500;
+            transition: color 0.3s;
+            position: relative;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            color: #000;
+        }
+
+        .nav-item.active::after {
+            content: '';
+            position: absolute;
+            bottom: -22px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: #000;
+        }
+
+        /* 5. 内容区域 */
+        .content-area {
+            flex: 1;
+            padding: 50px;
             overflow-y: auto;
+            position: relative;
         }
 
-        /* 界面切换逻辑 */
-        .interface {
+        /* 滚动条美化 */
+        .content-area::-webkit-scrollbar { width: 6px; }
+        .content-area::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.1); border-radius: 3px; }
+
+        /* 界面切换动画 */
+        .view {
             display: none;
-            animation: fadeIn 0.5s ease-in-out;
+            animation: fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
         }
-        .interface.active {
-            display: block;
-        }
+        .view.active { display: block; }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* 内容样式 */
+        /* 排版样式 */
         h1 {
-            font-size: 32px;
-            color: #fff;
+            font-size: 42px;
             margin-bottom: 10px;
+            font-weight: 300;
+            letter-spacing: -1px;
+            color: #111;
+        }
+        
+        h2 {
+            font-size: 14px;
             text-transform: uppercase;
             letter-spacing: 2px;
-            border-bottom: 2px solid #00d2ff;
-            padding-bottom: 10px;
-            display: inline-block;
+            color: #888;
+            margin-bottom: 40px;
+            font-weight: 600;
         }
 
-        .subtitle {
-            color: #00d2ff;
-            font-size: 14px;
-            margin-bottom: 30px;
-            font-family: "Courier New", monospace;
+        p {
+            line-height: 1.8;
+            color: #444;
+            margin-bottom: 20px;
+            font-size: 16px;
+            text-align: justify;
         }
 
-        .data-grid {
+        .highlight {
+            background: linear-gradient(120deg, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.05) 100%);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        /* 网格布局 */
+        .grid-2 {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 20px;
+            gap: 40px;
+            margin-top: 40px;
         }
 
-        .data-card {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(0, 210, 255, 0.3);
-            padding: 20px;
-            border-radius: 5px;
-            transition: transform 0.2s;
+        .stat-box {
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.4);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.02);
         }
 
-        .data-card:hover {
-            transform: scale(1.02);
-            background: rgba(0, 210, 255, 0.1);
+        .stat-number {
+            font-size: 48px;
+            font-weight: 300;
+            color: #000;
+            margin-bottom: 10px;
+            font-family: "Courier New", monospace; /* 数字用等宽字体更有质感 */
         }
 
-        .big-number {
-            font-size: 40px;
-            font-weight: bold;
-            color: #fff;
-            text-shadow: 0 0 15px rgba(0, 210, 255, 0.8);
-        }
-
-        .highlight-text {
-            color: #00d2ff;
-            font-weight: bold;
-        }
-
-        .group-box {
-            text-align: center;
-            padding: 40px;
-            border: 2px dashed #00d2ff;
-            background: rgba(0, 210, 255, 0.05);
-            margin-top: 20px;
-        }
-
-        .group-id {
-            font-size: 36px;
-            color: #fff;
-            font-family: "Courier New", monospace;
-            letter-spacing: 5px;
-            margin: 20px 0;
-            text-shadow: 0 0 20px #00d2ff;
-        }
-
-        /* 底部署名 */
-        .footer-credit {
-            position: absolute;
-            bottom: 20px;
-            right: 40px;
-            font-size: 12px;
-            color: #555;
-            font-family: "Courier New", monospace;
+        .stat-label {
+            font-size: 13px;
+            color: #888;
             text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
-        /* 响应式调整 */
+        .big-card {
+            background: #fff;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+            text-align: center;
+            margin-top: 30px;
+            border: 1px solid #f0f0f0;
+        }
+
+        .qr-placeholder {
+            width: 150px;
+            height: 150px;
+            background: #f5f5f5;
+            margin: 0 auto 20px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ccc;
+            font-size: 12px;
+        }
+
+        /* 响应式 */
         @media (max-width: 768px) {
-            .terminal-container { flex-direction: column; height: 90vh; }
-            .sidebar { width: 100%; padding: 10px; flex-direction: row; overflow-x: auto; }
-            .nav-btn { padding: 10px 15px; font-size: 14px; white-space: nowrap; }
-            .main-display { padding: 20px; }
-            .data-grid { grid-template-columns: 1fr; }
-            .footer-credit { display: none; } /* 手机端隐藏署名防遮挡 */
+            .glass-container { width: 95%; height: 85vh; }
+            .navbar { flex-direction: column; gap: 20px; padding: 20px; }
+            .nav-links { gap: 15px; }
+            .content-area { padding: 30px; }
+            .grid-2 { grid-template-columns: 1fr; }
+            h1 { font-size: 32px; }
         }
     </style>
 </head>
 <body>
 
-    <div class="terminal-container">
-        <!-- 装饰角标 -->
-        <div class="corner top-left"></div>
-        <div class="corner top-right"></div>
-        <div class="corner bottom-left"></div>
-        <div class="corner bottom-right"></div>
+    <!-- 背景光斑 -->
+    <div class="liquid-bg"></div>
+    <div class="liquid-bg"></div>
 
-        <!-- 左侧导航 -->
-        <div class="sidebar">
-            <button class="nav-btn active" onclick="switchTab('home')">🚀 班级概况</button>
-            <button class="nav-btn" onclick="switchTab('stats')">📊 荣耀战绩</button>
-            <button class="nav-btn" onclick="switchTab('subject')">📚 核心学科</button>
-            <button class="nav-btn" onclick="switchTab('connect')">📡 接入网络</button>
-        </div>
+    <div class="glass-container">
+        <!-- 顶部导航 -->
+        <nav class="navbar">
+            <div class="brand">CLASS ONE.</div>
+            <div class="nav-links">
+                <div class="nav-item active" onclick="switchView('about', this)">关于</div>
+                <div class="nav-item" onclick="switchView('stats', this)">数据</div>
+                <div class="nav-item" onclick="switchView('english', this)">学科</div>
+                <div class="nav-item" onclick="switchView('join', this)">联系</div>
+            </div>
+        </nav>
 
-        <!-- 右侧显示区 -->
-        <div class="main-display">
+        <!-- 内容区 -->
+        <main class="content-area">
             
-            <!-- 界面1：班级概况 -->
-            <div id="home" class="interface active">
-                <h1>站前路学校 · 云锦路校区</h1>
-                <div class="subtitle">SYSTEM STATUS: ONLINE</div>
+            <!-- 界面1：关于 -->
+            <div id="about" class="view active">
+                <h2>系统概览 / Overview</h2>
+                <h1>站前路学校 · 八年级1班</h1>
+                <p>
+                    这里是云锦路校区的核心地带。我们不仅仅是一个行政班级，更是一个由四十六个独立思维、高能量个体组成的超级集群。
+                </p>
+                <p>
+                    在这个空间里，我们重新定义了“优秀”的标准。我们由校长直接管辖，这意味着我们拥有全校最顶尖的资源配置，同时也承受着最严苛的审视。我们拒绝平庸的温室培养，我们是在高压与竞争中自我进化的精英孵化器。在这里，每一天都是对极限的挑战，每一次思考都是对未知的探索。
+                </p>
+                <div class="grid-2">
+                    <div class="stat-box">
+                        <div class="stat-number">46</div>
+                        <div class="stat-label">活跃节点</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number">100%</div>
+                        <div class="stat-label">精英配置</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 界面2：数据 -->
+            <div id="stats" class="view">
+                <h2>性能指标 / Metrics</h2>
+                <h1>荣耀与统治力</h1>
+                <p>
+                    我们的荣耀，并非一蹴而就的偶然，而是日复一日精准计算与高效执行的结果。数据不会说谎，它冷静地记录着我们的每一次冲锋。
+                </p>
                 
-                <div class="data-grid">
-                    <div class="data-card">
-                        <h3>当前编制</h3>
-                        <div class="big-number">46</di
+                <div class="grid-2">
+                    <div class="stat-box">
+                        <div class="stat-number">NO.2</div>
+                        <div class="stat-label">年级综合排名</div>
+                        <p style="font-size: 14px; margin-top: 15px; color: #666;">
+                            常年稳居年级第二，这不仅是排名，更是一种<span class="highlight">恐怖的稳定性</span>。我们像精密仪器一样运行，从不失速。
+                        </p>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number">TOP</div>
+                        <div class="stat-label">管理层级</div>
+                        <p style="font-size: 14px; margin-top: 15px; color: #666;">
+                            <span class="highlight">校长直管</span>。这意味着我们拥有最高的权限，也代表着我们处于风暴的中心，时刻准备着应对挑战。
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 界面3：学科 -->
+            <div id="english" class="view">
+                <h2>核心算力 / Core Subject</h2>
+                <h1>英语学科 · 绝对领域</h1>
+                <p>
+                    语言是思维的边界，而我们正在突破这个边界。英语，作为八年级1班最锋利的武器，不仅是一门学科，更是我们连接世界的桥梁。
+                </p>
+                <p>
+                    从莎士比亚的十四行诗到硅谷的前沿科技，从伦敦的雾都到纽约的霓虹，我们用语言的力量，构建起属于自己的文化壁垒。我们不是在学英语，我们是在用英语思考，用英语创造，用英语定义未来。
+                </p>
+                <div class="big-card">
+                    <div style="font-size: 60px; margin-bottom: 20px;">🇬🇧</div>
+                    <h3 style="font-weight: 400; letter-spacing: 2px; margin-bottom: 10px;">ENGLISH DEPT.</h3>
+                    <p style="font-size: 14px; color: #888; text-align: center;">
+                        词汇库容量：持续扩张<br>
+                        语法结构：已完全解析<br>
+                        文化渗透：正在进行
+                    </p>
+                </div>
+            </div>
+
+            <!-- 界面4：联系 -->
+            <div id="join" class="view">
+                <h2>外部连接 / Connection</h2>
+                <h1>接入集群</h1>
+                <p>
+                    如果你想加入这个由精英组成的超级集群，如果你想体验与最强大脑并肩作战的快感，那么，请通过以下坐标与我们建立连接。
+                </p>
+                <p>
+                    这不仅仅是一个群号，这是一张通往卓越世界的门票，是一次与未来同行者的握手。我们在这里，等待你的信号。
+                </p>
+
+                <div class="big-card">
+                    <div class="qr-placeholder">
+                        [ 二维码占位符 ]
+                    </div>
+                    <div style="font-size: 32px; font-weight: 300; letter-spacing: 2px; color: #000; margin-bottom: 10px;">
+                        892785633
+                    </div>
+                    <p style="font-size: 12px; color: #999; text-align: center;">
+                        等待握手信号...<br>
+                        准备接收新成员...
+                    </p>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <script>
+        function switchView(viewId, element) {
+            // 1. 切换导航状态
+            const navItems = document.querySelectorAll('.nav-item');
+            navItems.forEach(item => item.classList.remove('active'));
+            element.classList.add('active');
+
+            // 2. 切换内容显示
+            const views = document.querySelectorAll('.view');
+            views.forEach(view => view.classList.remove('active'));
+            document.getElementById(viewId).classList.add('active');
+        }
+    </script>
+</body>
+</html>
