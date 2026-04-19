@@ -19,7 +19,7 @@
             overflow: hidden;
         }
 
-        /* 2. 液态背景 (保持电脑端的高级感) */
+        /* 2. 液态背景 */
         .liquid-container {
             position: absolute;
             width: 100%;
@@ -60,7 +60,7 @@
             position: relative;
         }
 
-        /* 4. 导航栏 (顶部) */
+        /* 4. 导航栏 (顶部/底部通用) */
         .nav-bar {
             padding: 30px 50px;
             display: flex;
@@ -68,7 +68,7 @@
             align-items: center;
             background: rgba(255, 255, 255, 0.2);
             border-bottom: 1px solid rgba(255, 255, 255, 0.3);
-            flex-shrink: 0; /* 防止导航被压缩 */
+            flex-shrink: 0;
         }
 
         .logo {
@@ -81,31 +81,34 @@
         .nav-links {
             display: flex;
             gap: 40px;
+            position: relative; /* 为游标定位 */
         }
 
+        /* 导航链接样式 */
         .nav-link {
             cursor: pointer;
             font-size: 15px;
             font-weight: 600;
             color: #636e72;
-            transition: all 0.3s ease;
+            transition: color 0.3s ease;
             position: relative;
+            z-index: 1; /* 保证文字在游标上面 */
             padding: 5px 0;
         }
 
         .nav-link:hover { color: #2d3436; }
 
-        .nav-link.active::after {
-            content: '';
+        /* 液态游标 - 那个会跑的胶囊 */
+        .nav-liquid {
             position: absolute;
             bottom: -5px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 6px;
+            left: 0;
             height: 6px;
+            width: 20px; /* 初始宽度 */
             background: #2d3436;
-            border-radius: 50%;
-            animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border-radius: 3px;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); /* 果冻动画曲线 */
+            z-index: 0;
         }
 
         /* 5. 内容区域 */
@@ -114,12 +117,12 @@
             padding: 50px;
             overflow-y: auto;
             position: relative;
-            -webkit-overflow-scrolling: touch; /* 开启iOS惯性滚动 */
+            -webkit-overflow-scrolling: touch;
         }
 
-        .content::-webkit-scrollbar { width: 0px; } /* 隐藏滚动条 */
+        .content::-webkit-scrollbar { width: 0px; }
 
-        /* 动画 */
+        /* 内容切换动画 */
         .view { display: none; opacity: 0; transform: translateY(30px) scale(0.98); transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); }
         .view.active { display: block; opacity: 1; transform: translateY(0) scale(1); }
 
@@ -141,33 +144,33 @@
         .id-number { font-size: 36px; font-weight: 700; letter-spacing: 2px; margin: 20px 0; color: #2d3436; }
 
         /* =========================================
-           手机端专属优化 (响应式布局)
+           手机端专属优化
            ========================================= */
         @media (max-width: 768px) {
             .glass-card {
                 width: 100%;
                 height: 100%;
-                border-radius: 0; /* 手机端全屏，去掉圆角 */
+                border-radius: 0;
                 border: none;
                 box-shadow: none;
             }
 
-            /* 导航栏变为底部固定栏 */
+            /* 底部导航栏样式 */
             .nav-bar {
                 position: absolute;
                 bottom: 0;
                 left: 0;
                 width: 100%;
                 padding: 15px 20px;
-                border-top: 1px solid rgba(255, 255, 255, 0.3);
+                border-top: 1px solid rgba(255, 255, 255, 0.2);
                 border-bottom: none;
-                background: rgba(255, 255, 255, 0.85); /* 底部栏背景更实一点 */
-                backdrop-filter: blur(15px);
-                justify-content: space-around; /* 平均分布 */
+                background: rgba(255, 255, 255, 0.1); /* 更透明 */
+                backdrop-filter: blur(20px); /* 增强模糊 */
+                justify-content: center;
                 z-index: 100;
             }
 
-            .logo { display: none; } /* 手机端隐藏Logo，省空间 */
+            .logo { display: none; }
 
             .nav-links {
                 width: 100%;
@@ -176,158 +179,4 @@
             }
 
             .nav-link {
-                font-size: 13px; /* 字体稍微小一点 */
-                padding: 10px 0; /* 增加点击区域 */
-                text-align: center;
-            }
-
-            /* 手机端激活状态改为底部线条 */
-            .nav-link.active::after {
-                bottom: 0;
-                left: 0;
-                width: 100%;
-                height: 3px;
-                transform: none;
-                border-radius: 2px 2px 0 0;
-            }
-
-            /* 内容区域留出底部空间，防止被导航栏遮挡 */
-            .content {
-                padding: 30px 25px 100px 25px; /* 底部留白100px */
-            }
-
-            h1 { font-size: 32px; margin-bottom: 15px; } /* 标题缩小 */
-            .subtitle { font-size: 12px; margin-bottom: 20px; }
-            .text-block { font-size: 15px; margin-bottom: 20px; }
-            
-            .grid { grid-template-columns: 1fr; gap: 20px; } /* 卡片上下排列 */
-            .data-card { padding: 25px; }
-            .number { font-size: 40px; }
-            
-            .contact-box { padding: 30px 20px; }
-            .id-number { font-size: 28px; }
-        }
-    </style>
-</head>
-<body>
-
-    <!-- 液态背景层 -->
-    <div class="liquid-container">
-        <div class="blob blob-1"></div>
-        <div class="blob blob-2"></div>
-        <div class="blob blob-3"></div>
-    </div>
-
-    <div class="glass-card">
-        <!-- 导航 -->
-        <nav class="nav-bar">
-            <div class="logo">CLASS ONE.</div>
-            <div class="nav-links">
-                <div class="nav-link active" onclick="switchTab('home', this)">核心档案</div>
-                <div class="nav-link" onclick="switchTab('stats', this)">荣耀数据</div>
-                <div class="nav-link" onclick="switchTab('english', this)">核心学科</div>
-                <div class="nav-link" onclick="switchTab('join', this)">加入我们</div>
-            </div>
-        </nav>
-
-        <!-- 内容 -->
-        <main class="content">
-            
-            <!-- 1. 核心档案 -->
-            <div id="home" class="view active">
-                <span class="subtitle">System Overview</span>
-                <h1>站前路学校 · 云锦路校区</h1>
-                <p class="text-block">
-                    欢迎来到八年级1班的数字中枢。这里不是温室，而是精英的孵化器。我们由校长直管，拥有全校最顶尖的资源配置。
-                </p>
-                <p class="text-block">
-                    在这个空间里，<span class="highlight">46个高智商、高能量个体</span>组成了一个超级集群。我们拒绝平庸，拥抱卓越。每一天都是对极限的挑战，每一次思考都是对未知的探索。我们深知，只有最强大的意志，才能驾驭最强大的力量。
-                </p>
-                <div class="grid">
-                    <div class="data-card">
-                        <div class="number">46</div>
-                        <div class="label">活跃节点在线</div>
-                    </div>
-                    <div class="data-card">
-                        <div class="number">100%</div>
-                        <div class="label">精英配置率</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 2. 荣耀数据 -->
-            <div id="stats" class="view">
-                <span class="subtitle">Performance Metrics</span>
-                <h1>荣耀数据面板</h1>
-                <p class="text-block">
-                    我们的荣耀，并非一蹴而就的偶然，而是日复一日精准计算与高效执行的结果。常年稳居年级第二，这不仅是一个数字，更是一种深入骨髓的统治力。
-                </p>
-                <div class="grid">
-                    <div class="data-card">
-                        <div class="number">NO.2</div>
-                        <div class="label">综合排名稳定性</div>
-                        <p style="font-size:12px; color:#888; margin-top:10px;">常年保持年级第二，这是一种恐怖的稳定性。</p>
-                    </div>
-                    <div class="data-card">
-                        <div class="number">TOP</div>
-                        <div class="label">管理层级</div>
-                        <p style="font-size:12px; color:#888; margin-top:10px;">校长直管。意味着最高权限，也意味着处于风暴中心。</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 3. 核心学科 -->
-            <div id="english" class="view">
-                <span class="subtitle">Core Module</span>
-                <h1>核心学科 · 英语</h1>
-                <p class="text-block">
-                    语言是思维的边界，而我们正在突破这个边界。英语，作为我们最锋利的武器，不仅是一门学科，更是我们连接世界的桥梁。
-                </p>
-                <div class="data-card" style="text-align: center; padding: 60px 30px;">
-                    <div style="font-size: 60px; margin-bottom: 20px;">🇬🇧</div>
-                    <h3 style="font-weight: 700; letter-spacing: 2px; margin-bottom: 15px;">ENGLISH DEPT.</h3>
-                    <p style="color: #888; font-size: 14px; line-height: 1.6;">
-                        从莎士比亚到硅谷科技<br>
-                        我们不是在学英语<br>
-                        我们是在用英语定义未来
-                    </p>
-                </div>
-            </div>
-
-            <!-- 4. 加入我们 -->
-            <div id="join" class="view">
-                <span class="subtitle">Connection Protocol</span>
-                <h1>接入集群</h1>
-                <p class="text-block">
-                    如果你想加入这个由精英组成的超级集群，如果你想体验与最强大脑并肩作战的快感，请通过以下坐标与我们建立连接。
-                </p>
-                <div class="contact-box">
-                    <div style="font-size: 14px; color: #888; margin-bottom: 10px;">集群ID / Group ID</div>
-                    <div class="id-number">892785633</div>
-                    <div style="font-size: 12px; color: #b2bec3;">等待握手信号...</div>
-                </div>
-            </div>
-
-        </main>
-    </div>
-
-    <script>
-        function switchTab(tabId, element) {
-            // 1. 切换导航样式
-            const navLinks = document.querySelectorAll('.nav-link');
-            navLinks.forEach(link => link.classList.remove('active'));
-            element.classList.add('active');
-
-            // 2. 切换内容（带动画）
-            const views = document.querySelectorAll('.view');
-            views.forEach(view => view.classList.remove('active'));
-            
-            // 稍微延迟一点点显示，让动画看起来是从头开始的
-            setTimeout(() => {
-                document.getElementById(tabId).classList.add('active');
-            }, 50);
-        }
-    </script>
-
-</body>
-</html>
+                font-size:
