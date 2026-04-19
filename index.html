@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>八年级1班 · 液态档案</title>
+    <style>
+        /* 1. 基础设置 */
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #f0f2f5;
+            color: #333;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        /* 2. 液态背景 */
+        .liquid-container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: -1;
+            filter: blur(60px);
+        }
+
+        .blob {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.8;
+            animation: move 20s infinite alternate;
+        }
+
+        .blob-1 { top: 10%; left: 20%; width: 500px; height: 500px; background: linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%); animation-duration: 25s; }
+        .blob-2 { bottom: 20%; right: 10%; width: 400px; height: 400px; background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%); animation-duration: 30s; animation-direction: alternate-reverse; }
+        .blob-3 { bottom: 10%; left: 30%; width: 300px; height: 300px; background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%); animation-duration: 22s; }
+
+        @keyframes move { from { transform: translate(0, 0) scale(1); } to { transform: translate(50px, -50px) scale(1.1); } }
+
+        /* 3. 玻璃主容器 */
+        .glass-card {
+            width: 90%;
+            max-width: 1000px;
+            height: 750px;
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border-radius: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            border-top: 1px solid rgba(255, 255, 255, 0.9);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.1), inset 0 0 20px rgba(255, 255, 255, 0.5);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* 4. 导航栏 */
+        .nav-bar {
+            padding: 30px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.2);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+            flex-shrink: 0;
+        }
+
+        .logo {
+            font-size: 22px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            color: #2d3436;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 40px;
+            position: relative;
+        }
+
+        .nav-link {
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 600;
+            color: #636e72;
+            transition: color 0.3s ease;
+            position: relative;
+            z-index: 1;
+            padding: 5px 0;
+        }
+
+        .nav-link:hover { color: #2d3436; }
+
+        .nav-liquid {
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            height: 6px;
+            width: 20px;
+            background: #2d3436;
+            border-radius: 3px;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            z-index: 0;
+        }
+
+        /* 5. 内容区域 - 重点修改了这里实现动态效果 */
+        .content {
+            flex: 1;
+            padding: 50px;
+            overflow-y: auto;
+            position: relative;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .content::-webkit-scrollbar { width: 0px; }
+
+        /* 默认隐藏状态：向下偏移且透明 */
+        .view {
+            display: none; /* 默认不占位 */
+            opacity: 0;
+            transform: translateY(30px) scale(0.98);
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); /* 果冻弹性曲线 */
+        }
+
+        /* 激活状态：回到原位且完全不透明 */
+        .view.active {
+            display: block; /* 激活时显示 */
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+        /* 排版 */
+        h1 { font-size: 48px; font-weight: 800; letter-spacing: -1.5px; margin-bottom: 20px; background: linear-gradient(45deg, #2d3436, #636e72); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .subtitle { font-size: 14px; text-transform: uppercase; letter-spacing: 2px; color: #b2bec3; font-weight: 700; margin-bottom: 30px; display: block; }
+        .text-block { font-size: 17px; line-height: 1.8; color: #555; margin-bottom: 30px; text-align: justify; }
+        .highlight { color: #6c5ce7; font-weight: 700; background: rgba(108, 92, 231, 0.1); padding: 2px 6px; border-radius: 4px; }
+
+        /* 数据网格 */
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
+        .data-card { background: rgba(255, 255, 255, 0.5); padding: 30px; border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.6); box-shadow: 0 10px 30px rgba(0,0,0,0.03); transition: transform 0.3s ease; }
+        .data-card:hover { transform: translateY(-5px); background: rgba(255, 255, 255, 0.8); }
+        .number { font-size: 50px; font-weight: 800; color: #2d3436; margin-bottom: 10px; font-family: "Courier New", monospace; }
+        .label { font-size: 13px; color: #b2bec3; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
+
+        /* 联系卡片 */
+        .contact-box { background: #fff; padding: 50px; border-radius: 24px; text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.05); margin-top: 20px; border: 1px solid #f0f0f0; }
+        .id-number { font-size: 36px; font-weight: 700; letter-spacing: 2px; margin: 20px 0; color: #2d3436; }
+
+        /* =========================================
+           手机端专属优化
+           ========================================= */
+        @media (max-width: 768px) {
+            .glass-card {
+                width: 100%;
+                height: 100%;
+                border-radius: 0;
+                border: none;
+                box-shadow: none;
+            }
+
+            /* 底部导航栏样式 */
+            .nav-bar {
+                position: absolute;
+                bottom: 30px; /* 稍微抬起一点，留出署名空间 */
+                left: 5%;
+                width: 90%;
+                padding: 8px 8px;
+                border-radius: 20px; /* 胶囊形状 */
+                border: 1px solid rgba(255, 255, 255, 0.3);
+                background: rgba(255, 255, 255, 0.25);
+                backdrop-filter: blur(20px);
+                justify-content: center;
+                z-index: 100;
+                box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            }
+
+            .logo { display: none; }
+
+            .nav-links {
+                width: 100%;            display: flex;
+            justify-content: space-around;
+            position: relative; /* 为游标定位 */
+        }
+
+        /* 底部导航按钮 */
+        .nav-link {
+            flex: 1;
+            text-align: center;
+            padding: 12px 0;
+            font-size: 14px;
+            font-weight: 600;
+            color: #636e72;
+            z-index: 2; /* 保证文字在游标上面 */
+            transition: color 0.3s;
+        }
+
+        /* 底部液态游标 - 那个会跑的胶囊 */
+        .nav-liquid {
+            position: absolute;
+            bottom: 6px;
+            left: 5%; /* 初始位置 */
+            width: 23%; /* 4个按钮平分，留点缝隙 */
+            height: 36px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 16px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); /* 核心：果冻弹性曲线 */
+            z-index: 1;
+        }
+
+        /* 激活状态文字加粗变黑 */
+        .nav-link.active {
+            color: #2d3436;
+            font-weight: 800;
+        }
+
+        /* =========================================
+           3. 内容区域与动画
+           ========================================= */
+        .content {
+            flex: 1;
+            padding: 20px 25px 100px 25px; /* 底部留白给导航栏 */
+            overflow-y: auto;
+            height: 100%;
+        }
+
+        /* 隐藏滚动条 */
+        .content::-webkit-scrollbar { display: none; }
+
+        /* 页面视图基础样式 */
+        .view {
+            display: none; /* 默认隐藏 */
+            opacity: 0;
+            transform: translateY(40px) scale(0.95); /* 初始状态：向下偏移+缩小 */
+            animation: slideUp 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; /* 应用动画 */
+        }
+
+        .view.active {
+            display: block; /* 激活时显示 */
+        }
+
+        /* 关键帧动画：向上弹入 */
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        /* 排版样式 */
+        h1 {
+            font-size: 28px;
+            font-weight: 800;
+            margin-bottom: 15px;
+            color: #2d3436;
+            letter-spacing: -0.5px;
+        }
+
+        .subtitle {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: #b2bec3;
+            font-weight: 700;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .text-block {
+            font-size: 15px;
+            line-height: 1.6;
+            color: #555;
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+
+        /* 数据卡片网格 */
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .data-card {
+            background: rgba(255, 255, 255, 0.6);
+            padding: 20px;
+            border-radius: 16px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.6);
+        }
+
+        .number {
+            font-size: 32px;
+            font-weight: 800;
+            color: #2d3436;
+            font-family: "Courier New", monospace;
+        }
+
+        .label {
+            font-size: 11px;
+            color: #636e72;
+            text-transform: uppercase;
+            font-weight: 600;
+            margin-top: 5px;
+        }
+
+        /* 联系/词汇盒子 */
+        .contact-box {
+            background: rgba(255, 255, 255, 0.8);
+            padding: 25px;
+            border-radius: 20px;
+            text-align: center;
+            margin-top: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.8);
+        }
+
+        .id-number {
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            margin: 10px 0;
+            color: #2d3436;
+        }
+
+        /* =========================================
+           4. 底部署名样式
+           ========================================= */
+        .footer-credit {
+            position: absolute;
+            bottom: 10px;
+            width: 100%;
+            text-align: center;
+            font-size: 10px;
+            color: rgba(255, 255, 255, 0.6);
+            pointer-events: none; /* 允许点击穿透 */
+            font-weight: 500;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 液态背景容器 -->
+    <div class="liquid-container">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+    </div>
+
+    <!-- 主卡片容器 -->
+    <div class="glass-card">
+
+        <!-- 导航栏 -->
+        <nav class="nav-bar">
+            <div class="nav-links">
+                <!-- 液态游标 -->
+                <div class="nav-liquid" id="navLiquid"></div>
+
+                <!-- 导航按钮 -->
+                <div class="nav-link active" onclick="switchTab('home', this)">核心</div>
+                <div class="nav-link" onclick="switchTab('stats', this)">数据</div>
+                <div class="nav-link" onclick="switchTab('english', this)">学科</div>
+                <div class="nav-link" onclick="switchTab('join', this)">加入</div>
+            </div>
+        </nav>
+
+        <!-- 底部署名 -->
+        <div class="footer-credit">该网站由fyc同学搭建</div>
+
+        <!-- 内容区域 -->
+        <main class="content">
+
+            <!-- 1. 核心档案 -->
+            <div id="home" class="view active">
+                <span class="subtitle">System Overview</span>
+                <h1>站前路学校 · 云锦校区</h1>
+                <p class="text-block">
+                    欢迎来到八年级1班的数字中枢。这里不是温室，而是精英的孵化器。
+                </p>
+                <div class="grid">
+                    <div class="data-card">
+                        <div class="number">46</div>
+                        <div class="label">活跃节点</div>
+                    </div>
+                    <div class="data-card">
+                        <div class="number">100%</div>
+                        <div class="label">精英配置</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. 荣耀数据 -->
+            <div id="stats" class="view">
+                <span class="subtitle">Performance</span>
+                <h1>荣耀数据面板</h1>
+                <p class="text-block">
+                    我们的荣耀，并非一蹴而就的偶然，而是日复一日精准计算与极致执行的结果。
+                </p>
+                <div class="grid">
+                    <div class="data-card">
+                        <div class="number">No.1</div>
+                        <div class="label">年级综合排名</div>
+                    </div>
+                    <div class="data-card">
+                        <div class="number">A+</div>
+                        <div class="label">学科优良率</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. 核心学科 -->
+            <div id="english" class="view">
+                <span class="subtitle">Core Subject</span>
+                <h1>核心学科：英语</h1>
+                <p class="text-block">
+                    英语不仅是语言，它是连接世界的桥梁。在八年级1班，我们将语言学习视为一种思维训练。
+            </p>
+            <div class="contact-box">
+                <div class="label">今日词汇挑战</div>
+                <div class="id-number">fuck</div>
+                <div style="font-size:12px; color:#888; margin-top:5px;">
+                    v. 艹
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. 加入我们 -->
+        <div id="join" class="view">
+            <span class="subtitle">Join Us</span>
+            <h1>加入我们</h1>
+            <p class="text-block">
+                八年级1班的列车正在高速行驶。如果你拥有同样的野心和热情，欢迎通过以下方式与我们建立连接。
+            </p>
+            <div class="contact-box">
+                <div class="label">一班nb666</div>
+                <div class="id-number">892785633</div>
+                <div style="font-size:12px; color:#888; margin-top:10px;">
+                    周一至周五 08:00 - 18:00
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- 底部版权信息 -->
+    <div style="text-align: center; padding: 10px; color: rgba(255,255,255,0.4); font-size: 12px; margin-bottom: 10px;">
+        该网站由 fyc 同学搭建
+    </div>
+</div>
+
+<script>
+    // 页面加载完成后执行
+    document.addEventListener('DOMContentLoaded', function() {
+        // 初始化游标位置
+        updateCursor();
+
+        // 窗口大小改变时重新计算
+        window.addEventListener('resize', updateCursor);
+    });
+
+    function switchTab(tabId, element) {
+        // 1. 切换内容 (带动画)
+        const views = document.querySelectorAll('.view');
+        views.forEach(view => {
+            // 先移除所有状态
+            view.classList.remove('active');
+            // 触发重绘，确保动画能重新播放
+            void view.offsetWidth;
+        });
+
+        // 显示目标
+        const target = document.getElementById(tabId);
+        if(target) target.classList.add('active');
+
+        // 2. 移动游标
+        // 移除所有激活状态
+        const links = document.querySelectorAll('.nav-link');
+        links.forEach(link => link.classList.remove('active'));
+        // 激活当前
+        element.classList.add('active');
+
+        // 3. 计算位置
+        updateCursor();
+    }
+
+    function updateCursor() {
+        const activeLink = document.querySelector('.nav-link.active');
+        const cursor = document.querySelector('.nav-liquid');
+
+        if (activeLink && cursor) {
+            // 获取当前激活按钮的位置
+            const rect = activeLink.getBoundingClientRect();
+            const parentRect = activeLink.parentElement.getBoundingClientRect();
+
+            // 计算相对位置
+            const leftPos = rect.left - parentRect.left;
+            const width = rect.width;
+
+            // 应用样式 (减去一点宽度做内边距效果)
+            cursor.style.left = (leftPos + 5) + 'px';
+            cursor.style.width = (width - 10) + 'px';
+        }
+    }
+</script>
+</body>
+</html>
