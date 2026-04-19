@@ -3,157 +3,229 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>站前路学校 · 八年级1班</title>
+    <title>站前路学校 · 八年级1班指挥系统</title>
     <style>
-        /* 1. 基础设置与液态背景动画 */
+        /* 1. 全局设置：深空黑背景 */
         * { margin: 0; padding: 0; box-sizing: border-box; }
-
+        
         body {
-            font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+            font-family: "Microsoft YaHei", "Segoe UI", sans-serif;
+            background-color: #050505;
+            color: #e0e0e0;
             height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            background: #0f0c29;  /* 深色底色 */
+            overflow: hidden;
+            background-image: 
+                linear-gradient(rgba(0, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 30px 30px; /* 网格背景 */
+        }
+
+        /* 2. 主容器：全息终端 */
+        .terminal-container {
+            width: 95%;
+            max-width: 1000px;
+            height: 700px;
+            background: rgba(10, 15, 20, 0.9);
+            border: 1px solid #00d2ff;
+            border-radius: 10px;
+            box-shadow: 0 0 30px rgba(0, 210, 255, 0.2);
+            display: flex;
             overflow: hidden;
             position: relative;
+            backdrop-filter: blur(10px);
         }
 
-        /* 流动的液态球体 */
-        .liquid-bg {
+        /* 装饰角标 */
+        .corner {
             position: absolute;
-            width: 150vw;
-            height: 150vw;
-            background: linear-gradient(45deg, #ff9a9e, #fad0c4, #a18cd1, #fbc2eb);
-            border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
-            animation: morph 15s infinite linear;
-            filter: blur(80px); /* 模糊产生液态感 */
-            opacity: 0.6;
-            z-index: 1;
-        }
-
-        @keyframes morph {
-            0% { border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%; transform: translate(0, 0) rotate(0deg); }
-            33% { border-radius: 70% 30% 50% 50% / 30% 30% 70% 70%; transform: translate(10%, 10%) rotate(120deg); }
-            66% { border-radius: 100% 60% 60% 100% / 100% 100% 60% 30%; transform: translate(-10%, -10%) rotate(240deg); }
-            100% { border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%; transform: translate(0, 0) rotate(360deg); }
-        }
-
-        /* 2. 毛玻璃卡片容器 */
-        .glass-card {
-            position: relative;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #00d2ff;
             z-index: 10;
-            width: 90%;
-            max-width: 450px;
-            height: 600px;
-            background: rgba(255, 255, 255, 0.1); /* 半透明白 */
-            backdrop-filter: blur(20px); /* 核心：毛玻璃模糊 */
-            -webkit-backdrop-filter: blur(20px);
-            border-radius: 30px;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+        }
+        .top-left { top: -2px; left: -2px; border-right: none; border-bottom: none; }
+        .top-right { top: -2px; right: -2px; border-left: none; border-bottom: none; }
+        .bottom-left { bottom: -2px; left: -2px; border-right: none; border-top: none; }
+        .bottom-right { bottom: -2px; right: -2px; border-left: none; border-top: none; }
+
+        /* 3. 左侧导航栏 */
+        .sidebar {
+            width: 220px;
+            background: rgba(0, 20, 30, 0.8);
+            border-right: 1px solid #00d2ff;
+            padding: 30px 0;
             display: flex;
             flex-direction: column;
-            overflow: hidden;
-            color: white;
+            gap: 15px;
         }
 
-        /* 3. 内容区域（用于切换） */
-        .content-area {
-            flex: 1;
-            padding: 40px 30px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            transition: transform 0.6s cubic-bezier(0.68, -0.55, 0.27, 1.55); /* 丝滑切换动画 */
-        }
-
-        /* 界面1：默认显示 */
-        #view-home { transform: translateY(0); position: absolute; width: 100%; height: 100%; }
-        /* 界面2：默认隐藏在下方 */
-        #view-secret { transform: translateY(100%); position: absolute; width: 100%; height: 100%; }
-
-        /* 当激活切换类时，界面位置互换 */
-        .slide-up #view-home { transform: translateY(-100%); }
-        .slide-up #view-secret { transform: translateY(0); }
-
-        /* 4. 文字与排版样式 */
-        h1 { font-size: 28px; font-weight: 800; letter-spacing: 2px; margin-bottom: 15px; text-shadow: 0 2px 10px rgba(0,0,0,0.2); }
-        h2 { font-size: 18px; font-weight: 400; opacity: 0.9; margin-bottom: 30px; color: #e0e0ff; }
-        .tag { background: rgba(255,255,255,0.2); padding: 5px 15px; border-radius: 20px; font-size: 14px; margin: 5px; display: inline-block; backdrop-filter: blur(5px); }
-        .highlight { font-size: 40px; font-weight: bold; color: #fff; text-shadow: 0 0 20px rgba(255,255,255,0.6); display: block; margin: 20px 0; }
-        .group-id { font-family: 'Courier New', monospace; font-size: 24px; letter-spacing: 3px; background: rgba(0,0,0,0.2); padding: 15px 30px; border-radius: 15px; border: 1px dashed rgba(255,255,255,0.5); }
-
-        /* 5. 底部切换按钮 */
-        .toggle-btn {
-            position: absolute;
-            bottom: 30px;
-            background: rgba(255,255,255,0.9);
-            color: #333;
+        .nav-btn {
+            background: transparent;
             border: none;
-            padding: 12px 30px;
-            border-radius: 50px;
+            color: #8899a6;
+            padding: 15px 25px;
+            text-align: left;
+            cursor: pointer;
             font-size: 16px;
             font-weight: bold;
-            cursor: pointer;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-            transition: transform 0.2s, background 0.2s;
-            z-index: 20;
+            transition: all 0.3s;
+            border-left: 3px solid transparent;
+            font-family: "Microsoft YaHei", sans-serif;
         }
-        .toggle-btn:active { transform: scale(0.9); background: #fff; }
 
+        .nav-btn:hover {
+            background: rgba(0, 210, 255, 0.1);
+            color: #fff;
+            padding-left: 30px;
+        }
+
+        .nav-btn.active {
+            background: rgba(0, 210, 255, 0.2);
+            color: #00d2ff;
+            border-left: 3px solid #00d2ff;
+            text-shadow: 0 0 10px #00d2ff;
+        }
+
+        /* 4. 右侧内容显示区 */
+        .main-display {
+            flex: 1;
+            padding: 40px;
+            position: relative;
+            overflow-y: auto;
+        }
+
+        /* 界面切换逻辑 */
+        .interface {
+            display: none;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        .interface.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* 内容样式 */
+        h1 {
+            font-size: 32px;
+            color: #fff;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            border-bottom: 2px solid #00d2ff;
+            padding-bottom: 10px;
+            display: inline-block;
+        }
+
+        .subtitle {
+            color: #00d2ff;
+            font-size: 14px;
+            margin-bottom: 30px;
+            font-family: "Courier New", monospace;
+        }
+
+        .data-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .data-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(0, 210, 255, 0.3);
+            padding: 20px;
+            border-radius: 5px;
+            transition: transform 0.2s;
+        }
+
+        .data-card:hover {
+            transform: scale(1.02);
+            background: rgba(0, 210, 255, 0.1);
+        }
+
+        .big-number {
+            font-size: 40px;
+            font-weight: bold;
+            color: #fff;
+            text-shadow: 0 0 15px rgba(0, 210, 255, 0.8);
+        }
+
+        .highlight-text {
+            color: #00d2ff;
+            font-weight: bold;
+        }
+
+        .group-box {
+            text-align: center;
+            padding: 40px;
+            border: 2px dashed #00d2ff;
+            background: rgba(0, 210, 255, 0.05);
+            margin-top: 20px;
+        }
+
+        .group-id {
+            font-size: 36px;
+            color: #fff;
+            font-family: "Courier New", monospace;
+            letter-spacing: 5px;
+            margin: 20px 0;
+            text-shadow: 0 0 20px #00d2ff;
+        }
+
+        /* 底部署名 */
+        .footer-credit {
+            position: absolute;
+            bottom: 20px;
+            right: 40px;
+            font-size: 12px;
+            color: #555;
+            font-family: "Courier New", monospace;
+            text-transform: uppercase;
+        }
+
+        /* 响应式调整 */
+        @media (max-width: 768px) {
+            .terminal-container { flex-direction: column; height: 90vh; }
+            .sidebar { width: 100%; padding: 10px; flex-direction: row; overflow-x: auto; }
+            .nav-btn { padding: 10px 15px; font-size: 14px; white-space: nowrap; }
+            .main-display { padding: 20px; }
+            .data-grid { grid-template-columns: 1fr; }
+            .footer-credit { display: none; } /* 手机端隐藏署名防遮挡 */
+        }
     </style>
 </head>
 <body>
 
-    <!-- 背景动画 -->
-    <div class="liquid-bg"></div>
+    <div class="terminal-container">
+        <!-- 装饰角标 -->
+        <div class="corner top-left"></div>
+        <div class="corner top-right"></div>
+        <div class="corner bottom-left"></div>
+        <div class="corner bottom-right"></div>
 
-    <!-- 毛玻璃卡片 -->
-    <div class="glass-card" id="mainCard">
-
-        <!-- 界面 1：班级主页 -->
-        <div class="content-area" id="view-home">
-            <h1>站前路学校</h1>
-            <h2>八年级 1 班</h2>
-            <div style="margin-top: 20px;">
-                <span class="tag">🚀 强势学科：英语</span>
-                <span class="tag">⚡️ 全员恶人(划掉)学霸</span>
-            </div>
-            <p style="margin-top: 30px; font-size: 14px; opacity: 0.7; line-height: 1.6; padding: 0 20px;">
-                这里汇聚了 46 位独特的灵魂<br>
-                我们在知识的海洋里<br>
-                偶尔冲浪，偶尔溺水，但永远向前。
-            </p>
+        <!-- 左侧导航 -->
+        <div class="sidebar">
+            <button class="nav-btn active" onclick="switchTab('home')">🚀 班级概况</button>
+            <button class="nav-btn" onclick="switchTab('stats')">📊 荣耀战绩</button>
+            <button class="nav-btn" onclick="switchTab('subject')">📚 核心学科</button>
+            <button class="nav-btn" onclick="switchTab('connect')">📡 接入网络</button>
         </div>
 
-        <!-- 界面 2：连接通道 -->
-        <div class="content-area" id="view-secret">
-            <h1>组织连接通道</h1>
-            <h2>仅限内部成员</h2>
-            <span style="font-size: 14px; opacity: 0.8;">学生群密钥</span>
-            <div class="group-id">892785633</div>
-            <p style="margin-top: 30px; font-size: 14px; opacity: 0.6;">
-                输入密钥，加入我们要塞。<br>
-                这里没有学渣，只有还没觉醒的战士。
-            </p>
-        </div>
-
-        <!-- 切换按钮 -->
-        <button class="toggle-btn" onclick="toggleView()">切换视图</button>
-
-    </div>
-
-    <!-- 切换逻辑脚本 -->
-    <script>
-        function toggleView() {
-            const card = document.getElementById('mainCard');
-            // 切换 CSS 类，触发上面的 slide-up 动画
-            card.classList.toggle('slide-up');
-        }
-    </script>
-
-</body>
-</html>
+        <!-- 右侧显示区 -->
+        <div class="main-display">
+            
+            <!-- 界面1：班级概况 -->
+            <div id="home" class="interface active">
+                <h1>站前路学校 · 云锦路校区</h1>
+                <div class="subtitle">SYSTEM STATUS: ONLINE</div>
+                
+                <div class="data-grid">
+                    <div class="data-card">
+                        <h3>当前编制</h3>
+                        <div class="big-number">46</di
