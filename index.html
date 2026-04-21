@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>八年级1班 · 液态档案</title>
+    <title>八年级1班 · 液态档案</title> 
     <style>
         /* 1. 基础设置 */
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -347,6 +347,36 @@
             font-weight: 500;
             text-shadow: 0 1px 2px rgba(0,0,0,0.1);
         }
+            /* === 悬浮按钮样式 === */
+.floating-btn {
+    position: fixed;      /* 固定定位，滚动也不动 */
+    bottom: 30px;         /* 距离底部 30px */
+    right: 30px;          /* 距离右侧 30px */
+    width: 55px;          /* 按钮宽度 */
+    height: 55px;         /* 按钮高度 */
+    background-color: #6c5ce7; /* 背景色（紫色，可改） */
+    color: white;         /* 图标颜色 */
+    border-radius: 12px;  /* 圆角，做成小方块感 */
+    text-align: center;   /* 文字居中 */
+    line-height: 55px;    /* 垂直居中 */
+    font-size: 24px;      /* 图标大小 */
+    box-shadow: 0 4px 15px rgba(108, 92, 231, 0.4); /* 阴影效果 */
+    text-decoration: none;/* 去掉下划线 */
+    z-index: 1000;        /* 确保在最上层 */
+    transition: transform 0.2s, background-color 0.2s; /* 动画过渡 */
+}
+
+/* 鼠标悬停时的效果 */
+.floating-btn:hover {
+    transform: scale(1.1); /* 稍微变大 */
+    background-color: #5649c4; /* 颜色变深 */
+}
+
+/* 点击时的效果 */
+.floating-btn:active {
+    transform: scale(0.95); /* 按下效果 */
+}
+
     </style>
 </head>
 <body>
@@ -561,5 +591,10 @@
         }
     }
 </script>
+        <!-- 悬浮公告按钮 -->
+    <a href="#notice-board" class="floating-btn" title="查看公告">
+        📢
+    </a>
+
 </body>
 </html>
