@@ -439,6 +439,98 @@
     color: #555;
     font-size: 15px;
     line-height: 1.6;
+/* === 公告栏胶囊按钮样式 === */
+.announcement-btn {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    height: 45px;
+    padding: 0 25px;
+    border-radius: 50px;
+    background: rgba(108, 92, 231, 0.95);
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    box-shadow: 0 4px 15px rgba(108, 92, 231, 0.4);
+    transition: all 0.3s ease;
+    backdrop-filter: blur(5px); /* 毛玻璃效果 */
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+.announcement-btn:hover {
+    transform: scale(1.05);
+    background: rgba(108, 92, 231, 1);
+    box-shadow: 0 0 20px rgba(108, 92, 231, 0.6);
+}
+
+/* === 弹窗遮罩层 === */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6); /* 半透明黑色背景 */
+    z-index: 2000; /* 必须比按钮层级高 */
+    display: none; /* 默认隐藏 */
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(3px); /* 背景模糊 */
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+/* 当 URL 带有 #notice-modal 时显示弹窗 */
+#notice-modal:target {
+    display: flex;
+    opacity: 1;
+}
+
+/* === 弹窗内容卡片 === */
+.modal-content {
+    background: rgba(255, 255, 255, 0.95); /* 白色半透明背景 */
+    width: 85%;
+    max-width: 400px;
+    border-radius: 20px;
+    padding: 25px;
+    text-align: center;
+    position: relative;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    transform: scale(0.8);
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.5);
+}
+
+/* 弹窗出现时的动画 */
+#notice-modal:target .modal-content {
+    transform: scale(1);
+}
+
+/* 标题样式 */
+.modal-header h2 {
+    margin: 0;
+    color: #333;
+    font-size: 22px;
+}
+
+/* 分割线 */
+.modal-divider {
+    border: 0;
+    border-top: 1px solid rgba(0,0,0,0.1);
+    margin: 15px 0;
+}
+
+/* 正文内容 */
+.modal-body {
+    color: #555;
+    font-size: 15px;
+    line-height: 1.6;
     text-align: left; /* 文字左对齐，阅读更舒服 */
     margin-bottom: 20px;
 }
@@ -684,30 +776,31 @@
         公告栏
     </a>
 
-    <!-- 2. 屏幕中间的透明广告弹窗（修正版） -->
+        <!-- 1. 悬浮胶囊按钮 -->
+    <a href="#notice-modal" class="announcement-btn">
+        公告栏
+    </a>
+
+    <!-- 2. 弹窗结构 -->
     <div id="notice-modal" class="modal-overlay">
         <div class="modal-content">
-            <!-- 标题区域 -->
-            <div class="modal-header">
-                <h2>📢 班级公告</h2>
-            </div>
-
-            <!-- 分割线 -->
-            <hr class="modal-divider">
-
-            <!-- 正文内容区域（你可以随意修改这里的文字） -->
+            <h2>📢 班级公告</h2>
+            
             <div class="modal-body">
-                <p><strong>【重要通知】</strong></p>
-                <p>这里是公告的具体内容。你可以写作业安排、考试提醒或者班级趣事。</p>
-                <p>目前这里显示的是默认文本，请在代码中修改。</p>
+                <p>这里是通知的具体内容区域。</p>
+                <p>你可以写考试安排、放假通知或者任何想说的话。</p>
             </div>
 
-            <!-- 底部关闭按钮 -->
-            <div class="modal-footer">
-                <a href="#" class="close-btn">关闭</a>
-            </div>
+            <hr class="modal-divider">
+            
+            <!-- 点击这里关闭 -->
+            <a href="#" class="close-btn">关闭</a>
         </div>
     </div>
+
+</body>
+</html>
+
 
 </body>
 </html>
