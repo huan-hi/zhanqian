@@ -346,89 +346,118 @@
             pointer-events: none; /* 允许点击穿透 */
             font-weight: 500;
             text-shadow: 0 1px 2px rgba(0,0,0,0.1);
-        }/* === 公告栏胶囊按钮样式 === */
+        }
+/* === 公告栏胶囊按钮样式 === */
 .announcement-btn {
     position: fixed;
-    bottom: 30px;         /* 距离底部距离 */
-    right: 30px;          /* 距离右侧距离 */
-    
-    /* 形状与尺寸 */
-    height: 45px;         /* 高度 */
-    padding: 0 25px;      /* 左右内边距，决定宽度 */
-    border-radius: 50px;  /* 超大圆角，形成胶囊/椭圆形状 */
-    
-    /* 视觉风格 */
-    background: rgba(108, 92, 231, 0.9); /* 半透明紫色背景 */
-    color: white;         /* 文字颜色 */
-    font-size: 16px;      /* 文字大小 */
-    font-weight: bold;    /* 文字加粗 */
-    text-decoration: none;/* 去掉下划线 */
-    
-    /* 布局 */
+    bottom: 30px;
+    right: 30px;
+    height: 45px;
+    padding: 0 25px;
+    border-radius: 50px;
+    background: rgba(108, 92, 231, 0.95);
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    text-decoration: none;
     display: flex;
     align-items: center;
     justify-content: center;
-    
-    /* 层级与阴影 */
     z-index: 1000;
     box-shadow: 0 4px 15px rgba(108, 92, 231, 0.4);
-    transition: all 0.3s ease; /* 平滑动画 */
+    transition: all 0.3s ease;
+    backdrop-filter: blur(5px); /* 毛玻璃效果 */
+    border: 1px solid rgba(255,255,255,0.1);
 }
 
-/* 鼠标悬停效果 */
 .announcement-btn:hover {
-    transform: translateY(-3px); /* 微微上浮 */
-    background: rgba(108, 92, 231, 1); /* 颜色变实 */
-    box-shadow: 0 8px 20px rgba(108, 92, 231, 0.6);
+    transform: scale(1.05);
+    background: rgba(108, 92, 231, 1);
+    box-shadow: 0 0 20px rgba(108, 92, 231, 0.6);
 }
 
-/* === 弹窗广告栏样式 === */
-.announcement-modal {
-    display: none; /* 默认隐藏 */
+/* === 弹窗遮罩层 === */
+.modal-overlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5); /* 背景遮罩（半透明黑） */
-    z-index: 2000; /* 确保盖在所有内容之上 */
-    justify-content: center; /* 水平居中 */
-    align-items: center; /* 垂直居中 */
-    backdrop-filter: blur(5px); /* 背景模糊效果（毛玻璃） */
+    background: rgba(0, 0, 0, 0.6); /* 半透明黑色背景 */
+    z-index: 2000; /* 必须比按钮层级高 */
+    display: none; /* 默认隐藏 */
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(3px); /* 背景模糊 */
+    opacity: 0;
+    transition: opacity 0.3s ease;
 }
 
-/* 弹窗内容框 */
+/* 当 URL 带有 #notice-modal 时显示弹窗 */
+#notice-modal:target {
+    display: flex;
+    opacity: 1;
+}
+
+/* === 弹窗内容卡片 === */
 .modal-content {
-    background: rgba(255, 255, 255, 0.95); /* 弹窗背景（近乎不透明白） */
-    width: 80%;       /* 宽度占屏幕 80% */
-    max-width: 500px; /* 最大宽度 500px */
-    padding: 30px;    /* 内边距 */
-    border-radius: 20px; /* 大圆角 */
+    background: rgba(255, 255, 255, 0.95); /* 白色半透明背景 */
+    width: 85%;
+    max-width: 400px;
+    border-radius: 20px;
+    padding: 25px;
     text-align: center;
     position: relative;
     box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-    animation: popUp 0.3s ease-out; /* 弹出动画 */
+    transform: scale(0.8);
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.5);
+}
+
+/* 弹窗出现时的动画 */
+#notice-modal:target .modal-content {
+    transform: scale(1);
+}
+
+/* 标题样式 */
+.modal-header h2 {
+    margin: 0;
+    color: #333;
+    font-size: 22px;
+}
+
+/* 分割线 */
+.modal-divider {
+    border: 0;
+    border-top: 1px solid rgba(0,0,0,0.1);
+    margin: 15px 0;
+}
+
+/* 正文内容 */
+.modal-body {
+    color: #555;
+    font-size: 15px;
+    line-height: 1.6;
+    text-align: left; /* 文字左对齐，阅读更舒服 */
+    margin-bottom: 20px;
 }
 
 /* 关闭按钮 */
 .close-btn {
-    position: absolute;
-    top: 10px;
-    right: 15px;
-    font-size: 24px;
-    color: #888;
-    cursor: pointer;
+    display: block;
+    width: 100%;
+    padding: 10px 0;
+    background: #6c5ce7;
+    color: white;
+    text-decoration: none;
+    border-radius: 12px;
     font-weight: bold;
+    transition: background 0.2s;
 }
 
 .close-btn:hover {
-    color: #333;
-}
-
-/* 弹窗出现动画 */
-@keyframes popUp {
-    from { transform: scale(0.7); opacity: 0; }
-    to { transform: scale(1); opacity: 1; }
+    background: #5649c4;
 }
 
     </style>
@@ -650,17 +679,36 @@
         公告栏
     </a>
 
-    <!-- 2. 屏幕中间的透明广告弹窗 -->
+    <!-- 1. 悬浮的胶囊按钮 -->
+    <a href="#notice-modal" class="announcement-btn">
+        公告栏
+    </a>
+
+    <!-- 2. 屏幕中间的透明广告弹窗（修正版） -->
     <div id="notice-modal" class="modal-overlay">
         <div class="modal-content">
-            <h2>公告</h2>
-            <p>应亿恒是gay</p>
-            <p>乐子应亿恒拉完了</p>
-            <hr>
-            <p style="font-size: 14px; opacity: 0.8;">点击空白处或下方按钮关闭</p>
-            <a href="#" class="close-btn">我知道了</a>
+            <!-- 标题区域 -->
+            <div class="modal-header">
+                <h2>📢 班级公告</h2>
+            </div>
+
+            <!-- 分割线 -->
+            <hr class="modal-divider">
+
+            <!-- 正文内容区域（你可以随意修改这里的文字） -->
+            <div class="modal-body">
+                <p><strong>【重要通知】</strong></p>
+                <p>这里是公告的具体内容。你可以写作业安排、考试提醒或者班级趣事。</p>
+                <p>目前这里显示的是默认文本，请在代码中修改。</p>
+            </div>
+
+            <!-- 底部关闭按钮 -->
+            <div class="modal-footer">
+                <a href="#" class="close-btn">关闭</a>
+            </div>
         </div>
     </div>
 
 </body>
 </html>
+
